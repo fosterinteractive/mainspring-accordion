@@ -24,13 +24,14 @@
 
     this.init();
   }
+
   // Public methods.
   Plugin.prototype = {
+
     /**
      * Initialization
      */
     init: function(options) {
-      // console.log('init');
       $.extend(this.options, options);
       var speed = this.options.speed;
       var $accordions = this.element;
@@ -64,14 +65,12 @@
 
         n++;
       });
-
-
     },
+
     /**
-     * Destroy the accordion.
+     * Remove the accordions javascript.
      */
     destroy: function() {
-      // console.log('destroy');
       var $accordions = this.element;
 
       $accordions.each(function() {
@@ -89,8 +88,8 @@
 
       this.element.removeData(dataKey);
     }
-
   }
+  // Private functions.
 
   /**
    * Click event on an accordion.
@@ -106,13 +105,7 @@
     // If the accordion is closed open it.
     if (state == 'is-closed') {
 
-      $content.velocity('slideDown', {
-        duration: speed,
-        progress: function() {
-          eqjs.refreshNodes();
-          eqjs.query(undefined, true);
-        }
-      });
+      $content.velocity('slideDown', {duration: speed});
 
       // Update aria.
       $content.attr('aria-hidden', 'false');
@@ -136,23 +129,20 @@
    * return plugin instance.
    */
   $.fn[pluginName] = function (options) {
+    var plugin = this.data(dataKey);
 
-      var plugin = this.data(dataKey);
-
-      // has plugin instantiated ?
-      if (plugin instanceof Plugin) {
-          // if have options arguments, call plugin.init() again
-          if (typeof options !== 'undefined') {
-              plugin.init(options);
-          }
-      } else {
-          plugin = new Plugin(this, options);
-          this.data(dataKey, plugin);
+    // has plugin instantiated ?
+    if (plugin instanceof Plugin) {
+      // if have options arguments, call plugin.init() again
+      if (typeof options !== 'undefined') {
+        plugin.init(options);
       }
+    } else {
+      plugin = new Plugin(this, options);
+      this.data(dataKey, plugin);
+    }
 
-      return plugin;
+    return plugin;
   };
-
-
 
 })(jQuery, window, document);
